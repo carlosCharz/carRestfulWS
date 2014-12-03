@@ -51,7 +51,6 @@ public class CarController {
 			response.setMessage(Util.ERROR_MESSAGE + ": " + e.getMessage());
 			logger.error(Util.ERROR_MESSAGE + ": " + e.getMessage());
 		}
-
 		return response;
 	}
 	
@@ -77,7 +76,6 @@ public class CarController {
 			response.setMessage(Util.ERROR_MESSAGE + ": " + e.getMessage());
 			logger.error(Util.ERROR_MESSAGE + ": " + e.getMessage());
 		}
-
 		return response;
 	}
 
@@ -147,6 +145,5 @@ public class CarController {
 			logger.error(Util.ERROR_MESSAGE + ": " + e.getMessage());
 		}
 		return response;
-
 	}
 }
