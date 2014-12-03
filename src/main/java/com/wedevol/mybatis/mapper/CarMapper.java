@@ -8,8 +8,12 @@ public interface CarMapper {
 
     public List<Car> getCars();
     
-    public int updateCarById(Car car);
+    public Car getCarById(int id);
     
     public int createCar(Car car);
+    
+    public int updateCar(Car car);
+    
+    public int deleteCarById(int id);
     
 }

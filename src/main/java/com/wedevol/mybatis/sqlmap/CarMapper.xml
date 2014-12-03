@@ -12,8 +12,44 @@
   <select id="getCars" resultMap="BaseResultMap">
 	select * from car
   </select> 
+  
+  <select id="getCarById" parameterType="int" resultMap="BaseResultMap">
+	select * from car where id=${value}
+  </select> 
+  
+  <insert id="createCar" parameterType="Car" >
+    insert into car 
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+		<if test="model != null" >
+        	MODEL,
+      	</if>
+      	<if test="year != null" >
+        	YEAR,
+      	</if>
+      	<if test="manufacturer != null" >
+        	MANUFACTURER,
+      	</if>
+      	<if test="country != null" >
+        	COUNTRY,
+      	</if>
+    </trim>
+     <trim prefix="values (" suffix=")" suffixOverrides="," >
+      	<if test="model != null" >
+        	#{model,jdbcType=VARCHAR},
+      	</if>
+      	<if test="year != null" >
+        	#{year,jdbcType=INTEGER},
+      	</if>
+      	<if test="manufacturer != null" >
+        	#{manufacturer,jdbcType=VARCHAR},
+      	</if>
+      	<if test="country != null" >
+        	#{country,jdbcType=VARCHAR},
+      	</if>
+      </trim>
+  </insert>
 
-  <update id="updateCarById" parameterType="Car" >
+  <update id="updateCar" parameterType="Car" >
     update car
     <set>
       <if test="model != null" >
@@ -31,5 +67,9 @@
     </set>
     where ID = #{id,jdbcType=INTEGER}
   </update>
+  
+  <delete id="deleteCarById" parameterType="int">
+	delete from car where id=${value}
+  </delete> 
 
 </mapper>

@@ -15,16 +15,30 @@ public class CarServiceImpl implements CarService {
 	@Autowired
 	private CarMapper carMapper;
 
+	@Override
 	public List<Car> getCars() throws Exception {
 		return carMapper.getCars();
 	}
-
-	public void updateCar(final Car car) throws Exception {
-		carMapper.updateCarById(car);
+	
+	@Override
+	public Car getCar(int id) throws Exception {
+		return carMapper.getCarById(id);
 	}
 
-	public void createCar(Car car) throws Exception {
+	@Override
+	public void createCar(final Car car) throws Exception {
 		carMapper.createCar(car);
 	}
+	
+	@Override
+	public void updateCar(final Car car) throws Exception {
+		carMapper.updateCar(car);
+	}
+
+	@Override
+	public void deleteCar(int id) throws Exception {
+		carMapper.deleteCarById(id);
+	}
+	
 
 }
