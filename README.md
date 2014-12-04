@@ -8,6 +8,7 @@ Technologies:
 2.mybatis
 3.mysql
 4.tomcat
+5.maven
 
 Methods:
 
