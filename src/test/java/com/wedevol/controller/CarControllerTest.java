@@ -9,6 +9,8 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.runners.MockitoJUnitRunner;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
@@ -32,7 +34,9 @@ import com.wedevol.util.Util;
 @ContextConfiguration("/servlet-context.xml")
 @WebAppConfiguration
 public class CarControllerTest {
-	
+
+	private static final Logger logger = LoggerFactory.getLogger(CarControllerTest.class);
+
 	@Mock
 	private CarService carServiceMock;
 
@@ -57,11 +61,14 @@ public class CarControllerTest {
 
 		when(carServiceMock.getCars()).thenReturn(carList);
 
-		mockMvc.perform(get("/car/list")).andExpect(status().isOk())
+		final MvcResult result = mockMvc.perform(get("/car/list")).andExpect(status().isOk())
 				.andExpect(content().contentType(Util.APPLICATION_JSON_UTF8)).andExpect(jsonPath("$.code", is(200)))
 				.andExpect(jsonPath("$.message", is("OK"))).andExpect(jsonPath("$.cars", hasSize(2)))
 				.andExpect(jsonPath("$.cars[0].id", is(1))).andExpect(jsonPath("$.cars[0].model", is("Rav4")))
-				.andExpect(jsonPath("$.cars[1].id", is(2))).andExpect(jsonPath("$.cars[1].model", is("Yaris")));
+				.andExpect(jsonPath("$.cars[1].id", is(2))).andExpect(jsonPath("$.cars[1].model", is("Yaris")))
+				.andReturn();
+
+		logger.debug(Util.JSON_RESPONSE_LABEL + result.getResponse().getContentAsString());
 
 		// Verify that the method is called only once
 		verify(carServiceMock, times(1)).getCars();
@@ -71,25 +78,21 @@ public class CarControllerTest {
 
 	@Test
 	public void getCar_CarNotFound_ShouldReturnHttpStatusCode404() throws Exception {
-		when(carServiceMock.getCar(new Integer(100))).thenThrow(new CarNotFoundException());
-		// doThrow(new CarNotFoundException()).when(carServiceMock).getCar(100);
-		 //when(carServiceMock.getCar(100)).thenReturn(null);
+		when(carServiceMock.getCar(Mockito.any(Integer.class))).thenThrow(new CarNotFoundException());
 
-		final MvcResult result = mockMvc.perform(get("/car/{id}", 100)).andExpect(status().isOk())
-				.andExpect(content().contentType(Util.APPLICATION_JSON_UTF8))/*.andExpect(jsonPath("$.code", is(404)))*/
-				.andReturn();
-		final String content = result.getResponse().getContentAsString();
+		final MvcResult result = mockMvc.perform(get("/car/{id}", Mockito.any(Integer.class)))
+				.andExpect(status().isOk()).andExpect(content().contentType(Util.APPLICATION_JSON_UTF8))
+				.andExpect(jsonPath("$.code", is(Util.NOT_FOUND_ERROR_CODE))).andReturn();
 
-		final String a = content;
-		final String b = a;
+		logger.debug(Util.JSON_RESPONSE_LABEL + result.getResponse().getContentAsString());
 
-		//verify(carServiceMock, times(1)).getCar(100);
-		//verifyNoMoreInteractions(carServiceMock);
+		verify(carServiceMock, times(1)).getCar(Mockito.any(Integer.class));
+		verifyNoMoreInteractions(carServiceMock);
 	}
-	
+
 	@Test
 	public void getCar_CarFound_ShouldReturnFoundCar() throws Exception {
-		
+
 		final CarResponse response = new CarResponse();
 		final Car car = CarUtil.getCarMock();
 
@@ -98,10 +101,12 @@ public class CarControllerTest {
 
 		when(carServiceMock.getCar(Mockito.any(Integer.class))).thenReturn(car);
 
-		mockMvc.perform(get("/car/{id}", Mockito.any(Integer.class))).andExpect(status().isOk())
-		.andExpect(content().contentType(Util.APPLICATION_JSON_UTF8)).andExpect(jsonPath("$.code", is(200)))
-		.andExpect(jsonPath("$.message", is("OK")))
-		.andExpect(jsonPath("$.car.id", is(1))).andExpect(jsonPath("$.car.model", is("Rav4")));
+		final MvcResult result = mockMvc.perform(get("/car/{id}", Mockito.any(Integer.class)))
+				.andExpect(status().isOk()).andExpect(content().contentType(Util.APPLICATION_JSON_UTF8))
+				.andExpect(jsonPath("$.code", is(Util.OK_CODE))).andExpect(jsonPath("$.message", is("OK")))
+				.andExpect(jsonPath("$.car.id", is(1))).andExpect(jsonPath("$.car.model", is("Rav4"))).andReturn();
+
+		logger.debug(Util.JSON_RESPONSE_LABEL + result.getResponse().getContentAsString());
 
 		verify(carServiceMock, times(1)).getCar(Mockito.any(Integer.class));
 		verifyNoMoreInteractions(carServiceMock);

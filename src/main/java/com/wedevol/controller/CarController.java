@@ -36,7 +36,7 @@ public class CarController {
 	@RequestMapping(value = "/list", method = RequestMethod.GET, produces = "application/json; charset=utf-8")
 	public @ResponseBody CarsResponse getListCars() {
 
-		CarsResponse response = new CarsResponse();
+		final CarsResponse response = new CarsResponse();
 		List<Car> list;
 
 		try {
@@ -44,7 +44,7 @@ public class CarController {
 			response.setCars(list);
 			response.setCode(Util.OK_CODE);
 			response.setMessage(Util.OK_MESSAGE);
-
+			logger.debug(Util.OK_LABEL + list);
 		} catch (Exception e) {
 			response.setCars(null);
 			response.setCode(Util.SERVER_ERROR_CODE);
@@ -69,6 +69,7 @@ public class CarController {
 			response.setCar(car);
 			response.setCode(Util.OK_CODE);
 			response.setMessage(Util.OK_MESSAGE);
+			logger.debug(Util.OK_LABEL + car);
 		} catch (ErrorException e) {
 			response.setCar(null);
 			response.setCode(e.getCode());
