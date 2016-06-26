@@ -16,6 +16,7 @@ import com.wedevol.bean.Car;
 import com.wedevol.bean.CarResponse;
 import com.wedevol.bean.CarsResponse;
 import com.wedevol.bean.StateResponse;
+import com.wedevol.exception.ErrorException;
 import com.wedevol.service.CarService;
 import com.wedevol.util.Util;
 
@@ -23,15 +24,14 @@ import com.wedevol.util.Util;
 @RequestMapping("/car")
 public class CarController {
 
-	private static final Logger logger = LoggerFactory
-			.getLogger(CarController.class);
+	private static final Logger logger = LoggerFactory.getLogger(CarController.class);
 
 	@Autowired
 	private CarService carService;
 
 	/* Get list of cars */
-	/* 
-	 * http://localhost:8080/carRestfulWS/car/list 
+	/*
+	 * http://localhost:8080/carRestfulWS/car/list
 	 */
 	@RequestMapping(value = "/list", method = RequestMethod.GET, produces = "application/json; charset=utf-8")
 	public @ResponseBody CarsResponse getListCars() {
@@ -47,19 +47,19 @@ public class CarController {
 
 		} catch (Exception e) {
 			response.setCars(null);
-			response.setCode(Util.ERROR_CODE);
-			response.setMessage(Util.ERROR_MESSAGE + ": " + e.getMessage());
-			logger.error(Util.ERROR_MESSAGE + ": " + e.getMessage());
+			response.setCode(Util.SERVER_ERROR_CODE);
+			response.setMessage(e.getMessage());
+			logger.error(Util.ERROR_LABEL + e.getMessage());
 		}
 		return response;
 	}
-	
+
 	/* Get a car */
-	/* 
-	 * http://localhost:8080/carRestfulWS/car/1 
+	/*
+	 * http://localhost:8080/carRestfulWS/car/1
 	 */
 	@RequestMapping(value = "/{id}", method = RequestMethod.GET, produces = "application/json; charset=utf-8")
-	public @ResponseBody CarResponse getCar(@PathVariable("id") int id) {
+	public @ResponseBody CarResponse getCar(@PathVariable("id") Integer id) {
 
 		CarResponse response = new CarResponse();
 		Car car;
@@ -69,20 +69,19 @@ public class CarController {
 			response.setCar(car);
 			response.setCode(Util.OK_CODE);
 			response.setMessage(Util.OK_MESSAGE);
-
-		} catch (Exception e) {
+		} catch (ErrorException e) {
 			response.setCar(null);
-			response.setCode(Util.ERROR_CODE);
-			response.setMessage(Util.ERROR_MESSAGE + ": " + e.getMessage());
-			logger.error(Util.ERROR_MESSAGE + ": " + e.getMessage());
+			response.setCode(e.getCode());
+			response.setMessage(e.getMessage());
+			logger.error(Util.ERROR_LABEL + e.getMessage());
 		}
 		return response;
 	}
 
 	/* Create a car */
-	/* 
-	 * http://localhost:8080/carRestfulWS/car/create 
-	 * {"model": "Yaris2","year": 2014,"manufacturer": "Toyota","country": "Japan"} 
+	/*
+	 * http://localhost:8080/carRestfulWS/car/create {"model": "Yaris2","year":
+	 * 2014,"manufacturer": "Toyota","country": "Japan"}
 	 */
 	@RequestMapping(value = "/create", method = RequestMethod.POST, produces = "application/json; charset=utf-8")
 	public @ResponseBody StateResponse createCar(@RequestBody Car request) {
@@ -94,21 +93,20 @@ public class CarController {
 			response.setCode(Util.OK_CODE);
 			response.setMessage(Util.OK_MESSAGE);
 		} catch (Exception e) {
-			response.setCode(Util.ERROR_CODE);
-			response.setMessage(Util.ERROR_MESSAGE + ": " + e.getMessage());
-			logger.error(Util.ERROR_MESSAGE + ": " + e.getMessage());
+			response.setCode(Util.SERVER_ERROR_CODE);
+			response.setMessage(Util.SERVER_ERROR_MESSAGE + ": " + e.getMessage());
+			logger.error(Util.SERVER_ERROR_MESSAGE + ": " + e.getMessage());
 		}
 		return response;
 	}
 
 	/* Update a car */
-	/* 
-	 * http://localhost:8080/carRestfulWS/car/6 
-	 * {"model": "Yaris3","year": 2015,"manufacturer": "Toyota","country": "Japan"} 
+	/*
+	 * http://localhost:8080/carRestfulWS/car/6 {"model": "Yaris3","year":
+	 * 2015,"manufacturer": "Toyota","country": "Japan"}
 	 */
 	@RequestMapping(value = "/{id}", method = RequestMethod.PUT, produces = "application/json; charset=utf-8")
-	public @ResponseBody StateResponse updateCar(@PathVariable("id") int id,
-			@RequestBody Car request) {
+	public @ResponseBody StateResponse updateCar(@PathVariable("id") int id, @RequestBody Car request) {
 
 		StateResponse response = new StateResponse();
 		request.setId(id);
@@ -118,17 +116,17 @@ public class CarController {
 			response.setCode(Util.OK_CODE);
 			response.setMessage(Util.OK_MESSAGE);
 		} catch (Exception e) {
-			response.setCode(Util.ERROR_CODE);
-			response.setMessage(Util.ERROR_MESSAGE + ": " + e.getMessage());
-			logger.error(Util.ERROR_MESSAGE + ": " + e.getMessage());
+			response.setCode(Util.SERVER_ERROR_CODE);
+			response.setMessage(Util.SERVER_ERROR_MESSAGE + ": " + e.getMessage());
+			logger.error(Util.SERVER_ERROR_MESSAGE + ": " + e.getMessage());
 		}
 		return response;
 
 	}
 
 	/* Delete a car */
-	/* 
-	 * http://localhost:8080/carRestfulWS/car/6 
+	/*
+	 * http://localhost:8080/carRestfulWS/car/6
 	 */
 	@RequestMapping(value = "/{id}", method = RequestMethod.DELETE, produces = "application/json; charset=utf-8")
 	public @ResponseBody StateResponse deleteCar(@PathVariable("id") int id) {
@@ -140,9 +138,9 @@ public class CarController {
 			response.setCode(Util.OK_CODE);
 			response.setMessage(Util.OK_MESSAGE);
 		} catch (Exception e) {
-			response.setCode(Util.ERROR_CODE);
-			response.setMessage(Util.ERROR_MESSAGE + ": " + e.getMessage());
-			logger.error(Util.ERROR_MESSAGE + ": " + e.getMessage());
+			response.setCode(Util.SERVER_ERROR_CODE);
+			response.setMessage(Util.SERVER_ERROR_MESSAGE + ": " + e.getMessage());
+			logger.error(Util.SERVER_ERROR_MESSAGE + ": " + e.getMessage());
 		}
 		return response;
 	}

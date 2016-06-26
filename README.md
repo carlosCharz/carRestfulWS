@@ -10,6 +10,8 @@ A car restful WS.
 4. tomcat
 5. maven
 
+The API Rest is fully tested with the spring-test framework.
+
 ##Methods:
 
 1. 	**Get list of cars. HTTP Method: GET**
