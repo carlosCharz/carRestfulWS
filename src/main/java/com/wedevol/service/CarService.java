@@ -11,7 +11,7 @@ public interface CarService {
 	
 	public Car getCar(Integer id) throws ErrorException;
 	
-	public void createCar(Car car) throws Exception;
+	public void createCar(Car car) throws ErrorException;
 	
 	public void updateCar(Car car) throws Exception;
 	

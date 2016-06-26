@@ -93,10 +93,11 @@ public class CarController {
 			carService.createCar(request);
 			response.setCode(Util.OK_CODE);
 			response.setMessage(Util.OK_MESSAGE);
-		} catch (Exception e) {
-			response.setCode(Util.SERVER_ERROR_CODE);
-			response.setMessage(Util.SERVER_ERROR_MESSAGE + ": " + e.getMessage());
-			logger.error(Util.SERVER_ERROR_MESSAGE + ": " + e.getMessage());
+			logger.debug(Util.OK_LABEL + "Object created successfully!");
+		} catch (ErrorException e) {
+			response.setCode(e.getCode());
+			response.setMessage(e.getMessage());
+			logger.error(Util.ERROR_LABEL + e.getMessage());
 		}
 		return response;
 	}

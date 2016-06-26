@@ -40,7 +40,7 @@ public class CarServiceImpl implements CarService {
 	}
 
 	@Override
-	public void createCar(final Car car) throws Exception {
+	public void createCar(final Car car) throws ErrorException {
 		carMapper.createCar(car);
 	}
 
